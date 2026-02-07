@@ -1,1 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Une belle personne</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #page1 {
+      text-align: center;
+      background: white;
+      padding: 60px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+
+    #page1 h1 {
+      font-size: 2.2em;
+      color: #333;
+      margin-bottom: 50px;
+      font-weight: 600;
+    }
+
+    .buttons-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 15px 40px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    #noBtn {
+      background: #f0f0f0;
+      color: #333;
+      position: relative;
+    }
+
+    #noBtn:hover {
+      transform: translate(30px, -30px);
+    }
+
+    #page2 {
+      display: none;
+      text-align: center;
+      max-width: 600px;
+      position: relative;
+      z-index: 10;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      #page1 {
+        padding: 40px 20px;
+        max-width: 100%;
+      }
+
+      #page1 h1 {
+        font-size: 1.5em;
+        margin-bottom: 30px;
+      }
+
+      button {
+        padding: 12px 30px;
+        font-size: 1em;
+      }
+
+      #noBtn:hover {
+        transform: translate(15px, -15px);
+      }
+
+      #gifContainer {
+        padding: 20px;
+      }
+
+      #page2 p {
+        padding: 20px;
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #page1 {
+        padding: 30px 15px;
+      }
+
+      #page1 h1 {
+        font-size: 1.2em;
+        margin-bottom: 25px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+      }
+
+      .buttons-container {
+        gap: 10px;
+      }
+
+      #noBtn:hover {
+        transform: translate(10px, -10px);
+      }
+
+      #gifContainer {
+        padding: 15px;
+      }
+
+      #page2 p {
+        padding: 15px;
+        font-size: 0.9em;
+        line-height: 1.6;
+      }
+
+      .heart {
+        font-size: 1.5em;
+      }
+    }
+
+    #page2.show {
+      display: block;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    #gifContainer {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+    }
+
+    #gifContainer img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 15px;
+      display: block;
+    }
+
+    #page2 p {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      font-size: 1.1em;
+      line-height: 1.8;
+      color: #333;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 2em;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="page1">
+    <h1>Est ce que tu es une belle personne ?</h1>
+    <div class="buttons-container">
+      <button id="yesBtn">Oui</button>
+      <button id="noBtn">Non</button>
+    </div>
+  </div>
+
+  <div id="page2">
+    <div id="gifContainer">
+      <img src="/data/1.gif" alt="Message">
+    </div>
+    <p>Tu es forte et rayonnante. Regarde le chemin que tu as déjà parcouru et tout ce que tu es aujourd’hui. De belles choses t’attendent encore, et tu n’es pas seule. Je t’aime</p>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+
+    yesBtn.addEventListener('click', () => {
+      page1.style.display = 'none';
+      page2.classList.add('show');
+      createHearts();
+    });
+
+    function moveButton() {
+      const randomX = Math.random() * 200 - 100;
+      const randomY = Math.random() * 200 - 100;
+      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveButton);
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      moveButton();
+    });
+
+    function createHearts() {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.classList.add('heart');
+          heart.textContent = '💛';
+
+          const startX = Math.random() * window.innerWidth;
+          heart.style.left = startX + 'px';
+          heart.style.top = '-50px';
+
+          const duration = 3 + Math.random() * 2;
+          heart.style.animation = `fall ${duration}s ease-in forwards`;
+
+          document.body.appendChild(heart);
+
+          setTimeout(() => heart.remove(), duration * 1000);
+        }, i * 100);
+      }
+    }
+  </script>
+</body>
+</html>
